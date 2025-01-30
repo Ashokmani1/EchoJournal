@@ -180,19 +180,19 @@ fun JournalHistoryScreen(
 
                     JournalFilterChip(
                         value = displayingMoods,
-                        onSelected = onAction,
+                        onAction = onAction,
                         onClear = { onAction(JournalListAction.ClearMoodFilter) },
-                        isSelected = false,
-                        leadingIcons = moodIcons)
+                        leadingIcons = moodIcons,
+                        selectedIds = uiState.selectedMoods.map { it.name }
+                    )
 
                     JournalFilterChip(
                         value = displayTopics,
-                        onSelected = onAction,
+                        onAction = onAction,
                         onClear = { onAction(JournalListAction.ClearTopicFilter) },
-                        isSelected = false,
                         leadingIcons = null,
                         list = listOf("a","work","personal", "private", "public"),
-                        selectedIds = listOf("a","work","personal")
+                        selectedIds = uiState.selectedTopics.toList()
                     )
                 }
             }

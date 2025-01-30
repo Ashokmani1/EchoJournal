@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
 import com.sample.echojournal.domain.model.Mood
+import com.sample.echojournal.domain.model.getMoodColor
 
 @Composable
 fun WaveformVisualizer(
@@ -51,7 +52,7 @@ fun WaveformVisualizer(
 
         drawPath(
             path = path,
-            color = mood.color.copy(alpha = 0.3f),
+            color = mood.getMoodColor().copy(alpha = 0.3f),
             style = Stroke(width = 2.dp.toPx())
         )
 
@@ -69,7 +70,7 @@ fun WaveformVisualizer(
 
         drawPath(
             path = progressPath,
-            color = mood.color,
+            color = mood.getMoodColor(),
             style = Stroke(width = 2.dp.toPx())
         )
     }

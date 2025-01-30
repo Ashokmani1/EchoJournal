@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sample.echojournal.domain.model.AudioEntry
+import com.sample.echojournal.domain.model.getMoodColor
 import com.sample.echojournal.ui.model.JournalUi
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -75,8 +76,8 @@ fun EchoJournalItem(
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
-                playButtonColor = journalUi.mood.color,
-                bgColor = journalUi.mood.color,
+                playButtonColor = journalUi.mood.getMoodColor(),
+                bgColor = journalUi.mood.getMoodColor(),
                 onTopicClick = { }
             )
 

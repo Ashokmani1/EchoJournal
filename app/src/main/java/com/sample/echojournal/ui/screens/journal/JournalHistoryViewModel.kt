@@ -1,12 +1,8 @@
 package com.sample.echojournal.ui.screens.journal
 
-import android.annotation.SuppressLint
 import android.media.MediaMetadataRetriever
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sample.echojournal.domain.audio.AudioPlayer
@@ -260,7 +256,7 @@ class JournalHistoryViewModel @Inject constructor(
                     title = "",
                     description = null,
                     audioPath = audioPath,
-                    mood = Mood.NEUTRAL,
+                    mood = Mood.Neutral,
                     topics = emptyList(),
                     timestamp = LocalDateTime.now(),
                     duration = duration,

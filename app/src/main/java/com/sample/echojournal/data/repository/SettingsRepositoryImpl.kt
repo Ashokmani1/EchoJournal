@@ -35,7 +35,7 @@ class SettingsRepositoryImpl @Inject constructor(
     override suspend fun updateDefaultTopics(topics: List<String>)
     {
         val currentSettings = settingsDao.getSettings().firstOrNull() ?: SettingsEntity(
-            defaultMood = Mood.NEUTRAL.name,
+            defaultMood = Mood.Neutral.name,
             defaultTopics = topics
         )
         settingsDao.updateSettings(currentSettings.copy(defaultTopics = topics))

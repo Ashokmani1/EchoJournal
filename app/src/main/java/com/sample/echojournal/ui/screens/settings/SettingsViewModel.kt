@@ -17,7 +17,7 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
     data class SettingsUiState(
-        val defaultMood: Mood = Mood.NEUTRAL,
+        val defaultMood: Mood = Mood.Neutral,
         val defaultTopics: List<String> = emptyList(),
         val availableTopics: List<String> = emptyList(),
         val isLoading: Boolean = false,
@@ -40,7 +40,7 @@ class SettingsViewModel @Inject constructor(
             ) { mood, topics ->
                 _uiState.update { state ->
                     state.copy(
-                        defaultMood = mood ?: Mood.NEUTRAL,
+                        defaultMood = mood ?: Mood.Neutral,
                         defaultTopics = topics
                     )
                 }

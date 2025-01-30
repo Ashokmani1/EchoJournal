@@ -24,7 +24,7 @@ class CreateRecordViewModel @Inject constructor(
     data class UiState(
         val title: String = "",
         val description: String = "",
-        val mood: Mood = Mood.NEUTRAL,
+        val mood: Mood = Mood.Neutral,
         val topics: List<String> = emptyList(),
         val availableTopics: List<String> = emptyList(),
         val audioPath: String = "",
