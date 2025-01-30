@@ -1,20 +1,25 @@
 package com.sample.echojournal.ui.screens.journal
 
 import android.os.Build
+import android.text.TextUtils
 import androidx.annotation.RequiresApi
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,6 +59,7 @@ import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.sample.echojournal.R
 import com.sample.echojournal.domain.audio.AudioRecorder
 import com.sample.echojournal.ui.components.EchoJournalListItem
@@ -74,7 +80,8 @@ fun EchoJournalListScreenRoot(audioRecorder: AudioRecorder,     onNavigateToSett
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class,
+    ExperimentalFoundationApi::class)
 @Composable
 fun JournalHistoryScreen(
     uiState: JournalHistoryViewModel.JournalHistoryUiState,
@@ -191,28 +198,101 @@ fun JournalHistoryScreen(
             }
         },
         floatingActionButton = {
-            Box(
-                modifier = Modifier
-            ){
-                if (isRecording)
+            Column(
+                verticalArrangement = Arrangement.spacedBy(50.dp),
+                horizontalAlignment = Alignment.End
+            ) {
+
+                if (uiState.isRecording)
                 {
-                    repeat(2) { index ->
-                        Box(
+                    IconButton(
+                        onClick = {
+                            onAction(JournalListAction.RecordingComplete(""))
+                                  },
+                        modifier = Modifier.background(color = MaterialTheme.colorScheme.onPrimaryContainer, shape = CircleShape)
+                    ) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_selected_tick),
+                            contentDescription = "Done",
+                            tint = MaterialTheme.colorScheme.primary,
                             modifier = Modifier
-                                .matchParentSize()
-                                .scale(scale)
-                                .scale(1f + (index * 0.2f))
-                                .alpha(0.3f - (index * 0.1f))
-                                .background(brush = gradient, shape = CircleShape)
+                                .size(48.dp)
+                                .padding(8.dp)
+                        )
+                    }
+
+                }
+
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(50.dp)
+                ) {
+
+                    if (uiState.isRecording)
+                    {
+                        IconButton(
+                            onClick = {
+                                onAction(JournalListAction.DiscardRecording)
+                                      },
+                            modifier = Modifier.background(
+                            color = MaterialTheme.colorScheme.errorContainer,
+                            shape = CircleShape)) {
+                            Icon(painter = painterResource(R.drawable.ic_discard),
+                                contentDescription = "Discard",
+                                tint = MaterialTheme.colorScheme.onErrorContainer,
+                                modifier = Modifier.size(48.dp).padding(8.dp))
+                        }
+                    }
+
+                    Box(modifier = Modifier) {
+                        if (uiState.isRecording)
+                        {
+                            repeat(2) { index ->
+                                Box(modifier = Modifier.matchParentSize().scale(scale)
+                                    .scale(1f + (index * 0.2f)).alpha(0.3f - (index * 0.1f))
+                                    .background(brush = gradient, shape = CircleShape))
+                            }
+                        }
+
+                        var offsetX by remember { mutableStateOf(0f) }
+
+                        var recording by remember { mutableStateOf(false) }
+
+                        Icon(painter = painterResource(
+                            if (uiState.isRecording) R.drawable.ic_mic else R.drawable.ic_add_record),
+                            contentDescription = "Record", tint = Color.White,
+                            modifier = Modifier.background(brush = gradient, shape = CircleShape)
+                                .size(64.dp)
+                                .padding(16.dp)
+                                .pointerInput(Unit) {
+                                    detectHorizontalDragGestures(onDragStart = {
+                                        offsetX = 0f
+                                    }) { change, dragAmount ->
+                                        if (recording)
+                                        {
+                                            change.consume()
+                                            offsetX += dragAmount
+                                            if (offsetX <= -50.dp.toPx())
+                                            {
+                                                onAction(JournalListAction.DiscardRecording)
+                                            }
+                                        }
+                                    }
+                                }
+                                .combinedClickable(onClick = {
+                                    if (!uiState.isRecording)
+                                    {
+                                        onAction(JournalListAction.CanShowSheetToRecord(true))
+                                    }
+                                }, onLongClick = {
+                                    if (!uiState.isRecording)
+                                    {
+                                        onAction(JournalListAction.StartRecording)
+                                        recording = true
+                                    }
+                                })
                         )
                     }
                 }
-
-                RecordingFAB(
-                    isRecording = uiState.isRecording,
-                    onStartRecording = { showRecordingSheet = true },
-                    onStopRecording = { onAction(JournalListAction.StopRecording) },
-                )
             }
         }
     ) { innerPadding ->

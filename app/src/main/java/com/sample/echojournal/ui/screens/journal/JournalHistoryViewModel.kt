@@ -33,9 +33,11 @@ class JournalHistoryViewModel @Inject constructor(
         val selectedMoods: Set<Mood> = emptySet(),
         val selectedTopics: Set<String> = emptySet(),
         val isRecording: Boolean = false,
+        val isPaused: Boolean = false,
         val currentlyPlayingId: String? = null,
         val error: String? = null,
-        val lastRecordedPath: String? = null
+        val lastRecordedPath: String? = null,
+        val showSheetToRecord: Boolean = false,
     )
 
     private val _uiState = MutableStateFlow(JournalHistoryUiState())
@@ -105,23 +107,96 @@ class JournalHistoryViewModel @Inject constructor(
 
     fun onAction(action: JournalListAction)
     {
-        when (action)
-        {
-            is JournalListAction.StopRecording -> stopRecording()
 
-            is JournalListAction.RecordingComplete ->
+        _uiState.update {
+            when (action)
             {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                is JournalListAction.SelectMood ->
                 {
-                    handleRecordingComplete(action.audioPath)
+                    it.copy(selectedMoods = _uiState.value.selectedMoods + action.mood)
+                }
+
+                is JournalListAction.DeselectMood ->
+                {
+                    it.copy(selectedMoods = _uiState.value.selectedMoods - action.mood)
+                }
+
+                is JournalListAction.SelectTopic ->
+                {
+                    it.copy(selectedTopics = _uiState.value.selectedTopics + action.topic)
+                }
+
+                is JournalListAction.DeselectTopic ->
+                {
+                    it.copy(selectedTopics = _uiState.value.selectedTopics - action.topic)
+                }
+
+                JournalListAction.ClearMoodFilter ->
+                {
+                    it.copy(selectedMoods = emptySet())
+                }
+
+                JournalListAction.ClearTopicFilter ->
+                {
+                    it.copy(selectedTopics = emptySet())
+                }
+
+                is JournalListAction.CanShowSheetToRecord ->
+                {
+
+                    if (action.show)
+                    {
+                        it.copy(showSheetToRecord = true)
+                    }
+                    else
+                    {
+                        it.copy(showSheetToRecord = false, isRecording = false, isPaused = false)
+                    }
+                }
+
+                JournalListAction.StartRecording ->
+                {
+                    it.copy(isRecording = true, isPaused = false)
+                }
+
+                JournalListAction.DiscardRecording ->
+                {
+                    it.copy(isRecording = false, isPaused = false)
+                }
+
+                JournalListAction.PauseRecording ->
+                {
+                    it.copy(isPaused = true, isRecording = false)
+                }
+
+                is JournalListAction.StopRecording ->
+                {
+                    stopRecording()
+                    it
+                }
+
+                is JournalListAction.RecordingComplete ->
+                {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    {
+                        handleRecordingComplete(action.audioPath)
+                    }
+
+                    it.copy(isRecording = false, showSheetToRecord = false)
+                }
+
+                is JournalListAction.StopAudio ->
+                {
+                    stopAudio()
+                    it
+                }
+
+                is JournalListAction.PlayAudio ->
+                {
+                    playAudio(action.id)
+                    it
                 }
             }
-
-            is JournalListAction.StopAudio ->  stopAudio()
-
-            is JournalListAction.PlayAudio -> playAudio(action.id)
-
-            else -> { }
         }
     }
 

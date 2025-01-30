@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.*
@@ -34,9 +35,12 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
+        showSplashScreen()
+
+        enableEdgeToEdge()
+
         super.onCreate(savedInstanceState)
 
-        showSplashScreen()
 
         handleIntent(intent)
 
@@ -47,16 +51,16 @@ class MainActivity : ComponentActivity() {
     {
         val splashScreen = installSplashScreen()
 
-        var keepSplashScreen = true
-
-        // Set the condition to keep the splash screen on screen
-        splashScreen.setKeepOnScreenCondition { keepSplashScreen }
-
-        lifecycleScope.launch {
-
-            delay(2000) // Keeps splash screen for 2 seconds
-            keepSplashScreen = false
-        }
+//        var keepSplashScreen = true
+//
+//        // Set the condition to keep the splash screen on screen
+//        splashScreen.setKeepOnScreenCondition { keepSplashScreen }
+//
+//        lifecycleScope.launch {
+//
+//            delay(2000) // Keeps splash screen for 2 seconds
+//            keepSplashScreen = false
+//        }
     }
 
     override fun onNewIntent(intent: Intent)
