@@ -13,9 +13,10 @@ class AudioRecorder @Inject constructor(
     private var recorder: MediaRecorder? = null
     private var currentFilePath: String? = null
 
-    fun startRecording(): String {
+    fun startRecording(): String
+    {
         val fileName = createFileName()
-        val file = File(context.cacheDir, fileName)
+        val file = File(context.filesDir, fileName)
         
         recorder = MediaRecorder().apply {
             setAudioSource(MediaRecorder.AudioSource.MIC)
@@ -30,29 +31,36 @@ class AudioRecorder @Inject constructor(
         return file.absolutePath
     }
 
-    fun pauseRecording() {
+    fun pauseRecording()
+    {
         recorder?.pause()
     }
 
-    fun resumeRecording() {
+    fun resumeRecording()
+    {
         recorder?.resume()
     }
 
-    fun stopRecording(): String? {
-        return try {
+    fun stopRecording(): String?
+    {
+        return try
+        {
             recorder?.apply {
                 stop()
                 release()
             }
             recorder = null
             currentFilePath
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             e.printStackTrace()
             null
         }
     }
 
-    private fun createFileName(): String {
+    private fun createFileName(): String
+    {
         val timestamp = LocalDateTime.now().format(
             DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")
         )

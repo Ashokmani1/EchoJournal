@@ -16,9 +16,10 @@ import com.sample.echojournal.domain.audio.AudioRecorder
 import com.sample.echojournal.ui.navigation.NavRoute
 import com.sample.echojournal.ui.navigation.NavRoute.Companion.createDeepLinkPattern
 import com.sample.echojournal.ui.navigation.rememberEchoJournalNavigation
+import com.sample.echojournal.ui.screens.journal.EchoJournalListScreenRoot
 import com.sample.echojournal.ui.screens.splash.SplashScreen
-import com.sample.echojournal.ui.screens.journal.JournalHistoryScreen
 import com.sample.echojournal.ui.screens.record.CreateRecordScreen
+import com.sample.echojournal.ui.screens.record.NewEntryScreen
 import com.sample.echojournal.ui.screens.settings.SettingsScreen
 
 
@@ -52,21 +53,19 @@ fun EchoJournalNavGraph(
                 }
             )
         ) { backStackEntry ->
-            val filter = backStackEntry.arguments?.getString("filter")
-            JournalHistoryScreen(
-                onNavigateToSettings = actions.navigateToSettings,
-                audioRecorder = AudioRecorder(LocalContext.current)
-//                onNavigateToRecord = actions.navigateToRecord,
-//                startRecording = startRecording,
-//                initialFilter = filter
-            )
 
+            val filter = backStackEntry.arguments?.getString("filter")
+
+            EchoJournalListScreenRoot(
+                audioRecorder = AudioRecorder(LocalContext.current),
+                onNavigateToSettings = actions.navigateToSettings,
+                onNavigateToNewEntry = actions.navigateToRecord
+            )
         }
 
         composable(NavRoute.Record.route) {
-            CreateRecordScreen(
-                onNavigateBack = actions.navigateUp
-            )
+
+            NewEntryScreen(onNavigateBack = actions.navigateUp)
         }
 
         composable(NavRoute.Settings.route) {

@@ -1,5 +1,7 @@
 package com.sample.echojournal.ui.screens.journal
 
+import android.annotation.SuppressLint
+import android.media.MediaMetadataRetriever
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
@@ -101,7 +103,30 @@ class JournalHistoryViewModel @Inject constructor(
         }
     }
 
-    fun stopAudio() {
+    fun onAction(action: JournalListAction)
+    {
+        when (action)
+        {
+            is JournalListAction.StopRecording -> stopRecording()
+
+            is JournalListAction.RecordingComplete ->
+            {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                {
+                    handleRecordingComplete(action.audioPath)
+                }
+            }
+
+            is JournalListAction.StopAudio ->  stopAudio()
+
+            is JournalListAction.PlayAudio -> playAudio(action.id)
+
+            else -> { }
+        }
+    }
+
+    private fun stopAudio()
+    {
         audioPlayer.stop()
         _uiState.update { it.copy(currentlyPlayingId = null) }
     }
@@ -111,7 +136,8 @@ class JournalHistoryViewModel @Inject constructor(
         _uiState.update { it.copy(isRecording = true) }
     }
 
-    fun stopRecording() {
+    private fun stopRecording()
+    {
         _uiState.update { it.copy(isRecording = false) }
     }
 
@@ -142,9 +168,18 @@ class JournalHistoryViewModel @Inject constructor(
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    fun handleRecordingComplete(audioPath: String) {
+    fun handleRecordingComplete(audioPath: String)
+    {
         viewModelScope.launch {
-            try {
+
+            try
+            {
+                val retriever = MediaMetadataRetriever().apply {
+                    setDataSource(audioPath)
+                }
+                val duration = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+                retriever.release()
+
                 val entry = AudioEntry(
                     id = UUID.randomUUID().toString(),
                     title = "",
@@ -153,7 +188,7 @@ class JournalHistoryViewModel @Inject constructor(
                     mood = Mood.NEUTRAL,
                     topics = emptyList(),
                     timestamp = LocalDateTime.now(),
-                    duration = 0L,
+                    duration = duration,
                     waveformData = emptyList()
                 )
                 repository.insertEntry(entry)
@@ -162,6 +197,7 @@ class JournalHistoryViewModel @Inject constructor(
                     lastRecordedPath = audioPath
                 )}
             } catch (e: Exception) {
+                e.printStackTrace()
                 _uiState.update { it.copy(error = e.message) }
             }
         }

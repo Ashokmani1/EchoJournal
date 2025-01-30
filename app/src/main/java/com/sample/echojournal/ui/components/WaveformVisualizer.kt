@@ -2,10 +2,12 @@ package com.sample.echojournal.ui.components
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.unit.dp
@@ -26,7 +28,7 @@ fun WaveformVisualizer(
     Canvas(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp)
+            .height(25.dp)
     ) {
         val width = size.width
         val height = size.height

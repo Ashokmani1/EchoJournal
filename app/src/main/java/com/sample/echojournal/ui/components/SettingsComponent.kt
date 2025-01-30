@@ -1,5 +1,6 @@
 package com.sample.echojournal.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,11 +20,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilterChip
-import androidx.compose.material3.FilterChipDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Snackbar
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.sample.echojournal.domain.model.Mood
 
@@ -45,17 +48,27 @@ fun MoodSelector(
     onMoodSelected: (Mood) -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Absolute.SpaceAround
     ) {
         Mood.entries.forEach { mood ->
-            FilterChip(
-                selected = mood == selectedMood,
-                onClick = { onMoodSelected(mood) },
-                label = { Text(mood.name) },
-                colors = FilterChipDefaults.filterChipColors(
-                    selectedContainerColor = mood.color.copy(alpha = 0.2f)
+
+            Column(modifier = Modifier.clickable { onMoodSelected(mood) }, horizontalAlignment = Alignment.CenterHorizontally) {
+
+                Image(
+                    painter = painterResource(id = if (mood == selectedMood) mood.iconResId else mood.unSelectedIconResId),
+                    contentDescription = mood.name,
+                    modifier = Modifier.size(37.dp)
                 )
-            )
+
+                Spacer(Modifier.height(5.dp))
+
+                Text(
+                    text = mood.name,
+                    style = MaterialTheme.typography.bodySmall
+                )
+
+            }
         }
     }
 }
@@ -70,33 +83,78 @@ fun DefaultTopicsSection(
 ) {
     var showTopicDialog by remember { mutableStateOf(false) }
 
-    Column {
-        Text(
-            text = "Default Topics",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(Modifier.height(8.dp))
-        FlowRow (
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            selectedTopics.forEach { topic ->
-                AssistChip(
-                    onClick = { /* Remove topic */ },
-                    label = { Text(topic) },
-                    trailingIcon = {
-                        Icon(Icons.Default.Close, "Remove topic")
-                    }
-                )
-            }
-            FilledTonalButton(
-                onClick = { showTopicDialog = true }
+    Card(colors = CardDefaults.cardColors(
+        containerColor = MaterialTheme.colorScheme.onPrimary
+    )) {
+
+        Column(modifier = Modifier.fillMaxWidth().padding(10.dp)) {
+
+            Text(
+                text = "My Topics",
+                style = MaterialTheme.typography.titleMedium
+            )
+
+            Spacer(Modifier.height(1.dp))
+
+            Text(
+                text = "Select default topics to apply to all new entries",
+                style = MaterialTheme.typography.bodyLarge
+            )
+
+            Spacer(Modifier.height(15.dp))
+
+            FlowRow (
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Icon(Icons.Default.Add, "Add topic")
-                Spacer(Modifier.width(4.dp))
-                Text("Add Topic")
+                selectedTopics.forEach { topic ->
+                    AssistChip(
+                        onClick = { /* Remove topic */ },
+                        label = { Text(topic) },
+                        trailingIcon = {
+                            Icon(Icons.Default.Close, "Remove topic")
+                        }
+                    )
+                }
+                FilledTonalButton(
+                    onClick = { showTopicDialog = true }
+                ) {
+                    Icon(Icons.Default.Add, "Add topic")
+                    Spacer(Modifier.width(4.dp))
+                    Text("Add Topic")
+                }
             }
         }
     }
+
+//    var showTopicDialog by remember { mutableStateOf(false) }
+//
+//    Column {
+//        Text(
+//            text = "Default Topics",
+//            style = MaterialTheme.typography.titleMedium
+//        )
+//        Spacer(Modifier.height(8.dp))
+//        FlowRow (
+//            horizontalArrangement = Arrangement.spacedBy(8.dp)
+//        ) {
+//            selectedTopics.forEach { topic ->
+//                AssistChip(
+//                    onClick = { /* Remove topic */ },
+//                    label = { Text(topic) },
+//                    trailingIcon = {
+//                        Icon(Icons.Default.Close, "Remove topic")
+//                    }
+//                )
+//            }
+//            FilledTonalButton(
+//                onClick = { showTopicDialog = true }
+//            ) {
+//                Icon(Icons.Default.Add, "Add topic")
+//                Spacer(Modifier.width(4.dp))
+//                Text("Add Topic")
+//            }
+//        }
+//    }
 
     if (showTopicDialog) {
         TopicSelectionDialog(

@@ -1,14 +1,13 @@
 package com.sample.echojournal.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-
 import androidx.compose.ui.text.googlefonts.GoogleFont
+
 import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.unit.sp
 import com.sample.echojournal.R
+
 
 val provider = GoogleFont.Provider(
     providerAuthority = "com.google.android.gms.fonts",
@@ -20,66 +19,25 @@ val InterFontFamily = FontFamily(
     Font(
         googleFont = GoogleFont("Inter"),
         fontProvider = provider,
-        weight = FontWeight.Normal // You can specify other weights if needed
     )
 )
 
-// Default Material 3 typography values
 val baseline = Typography()
 
 val AppTypography = Typography(
-    displayLarge = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 26.sp,
-        lineHeight = 32.sp
-    ),
-    displayMedium = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
-        lineHeight = 26.sp
-    ),
-    displaySmall = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 16.sp,
-        lineHeight = 24.sp
-    ),
-    headlineSmall = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 13.sp,
-        lineHeight = 18.sp
-    ),
-    headlineMedium = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 22.sp,
-        lineHeight = 26.sp
-    ),
-    bodyLarge = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 14.sp,
-        lineHeight = 20.sp
-    ),
-    bodySmall = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Normal,
-        fontSize = 12.sp,
-        lineHeight = 16.sp
-    ),
-    labelLarge = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp,
-        lineHeight = 12.sp // Auto
-    ),
-    labelSmall = TextStyle(
-        fontFamily = InterFontFamily,
-        fontWeight = FontWeight.Medium,
-        fontSize = 12.sp
-    )
+    displayLarge = baseline.displayLarge.copy(fontFamily = InterFontFamily),
+    displayMedium = baseline.displayMedium.copy(fontFamily = InterFontFamily),
+    displaySmall = baseline.displaySmall.copy(fontFamily = InterFontFamily),
+    headlineLarge = baseline.headlineLarge.copy(fontFamily = InterFontFamily, fontSize = 26.sp, lineHeight = 32.sp),
+    headlineMedium = baseline.headlineMedium.copy(fontFamily = InterFontFamily, fontSize = 22.sp, lineHeight = 26.sp),
+    headlineSmall = baseline.headlineSmall.copy(fontFamily = InterFontFamily, fontSize = 16.sp, lineHeight = 24.sp),
+    titleLarge = baseline.titleLarge.copy(fontFamily = InterFontFamily),
+    titleMedium = baseline.titleMedium.copy(fontFamily = InterFontFamily),
+    titleSmall = baseline.titleSmall.copy(fontFamily = InterFontFamily, fontSize = 13.sp, lineHeight = 18.sp),
+    bodyLarge = baseline.bodyLarge.copy(fontFamily = InterFontFamily),
+    bodyMedium = baseline.bodyMedium.copy(fontFamily = InterFontFamily, fontSize = 14.sp, lineHeight = 20.sp),
+    bodySmall = baseline.bodySmall.copy(fontFamily = InterFontFamily, fontSize = 12.sp, lineHeight = 16.sp),
+    labelLarge = baseline.labelLarge.copy(fontFamily = InterFontFamily, fontSize = 14.sp, lineHeight = 20.sp),
+    labelMedium = baseline.labelMedium.copy(fontFamily = InterFontFamily, fontSize = 12.sp),
+    labelSmall = baseline.labelSmall.copy(fontFamily = InterFontFamily),
 )
-

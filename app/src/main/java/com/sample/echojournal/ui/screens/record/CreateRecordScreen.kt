@@ -7,8 +7,11 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.sample.echojournal.R
 import com.sample.echojournal.domain.model.Mood
 import com.sample.echojournal.ui.components.AudioPreview
 import com.sample.echojournal.ui.components.MoodSelector
@@ -22,19 +25,21 @@ fun CreateRecordScreen(
     viewModel: CreateRecordViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
+
     var showExitDialog by remember { mutableStateOf(false) }
 
     BackHandler { showExitDialog = true }
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("New Entry") },
+            CenterAlignedTopAppBar(
+                title = { Text("New Entry", style = MaterialTheme.typography.titleLarge) },
                 navigationIcon = {
-                    IconButton(onClick = { showExitDialog = true }) {
-                        Icon(Icons.Default.ArrowBack, "Back")
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(painter = painterResource(R.drawable.ej_ic_back), "Back")
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(Color.Transparent)
             )
         }
     ) { padding ->

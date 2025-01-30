@@ -9,13 +9,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.compose.material3.SearchBar
 import androidx.compose.runtime.*
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
-import com.sample.echojournal.ui.navigation.EchoJournalNavGraph
 import com.sample.echojournal.ui.theme.EchoJournalTheme
+import com.sample.echojournal.ui.navigation.EchoJournalNavGraph
 import com.sample.echojournal.widget.RecordWidgetProvider.Companion.EXTRA_START_RECORDING
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
